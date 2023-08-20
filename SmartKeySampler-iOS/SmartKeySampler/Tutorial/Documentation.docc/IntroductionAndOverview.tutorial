@@ -1,0 +1,42 @@
+@Tutorial(time: 5) {
+    @Intro(title: "Introduction And Overview") {
+        自己紹介及び本トークの概要
+    }
+    
+    @Section(title: "自己紹介") {
+        @ContentAndMedia {
+            ## 名前： oka yuji(おか ゆうじ)
+            ## Twitter： @oka_yuuji
+            ## 職歴： 工業高校教諭（電気・電子・情報）
+            ## → NRIネットコム株式会社 
+            ## → サイボウズ株式会社
+            @Image(source: icon, alt: "")
+        }
+    }
+    
+    @Section(title: "トーク概要") {
+        @ContentAndMedia {
+            「iPhoneで他のデバイスを操作したい」と思ったことはありませんか？
+            
+            Bluetoothを使用すれば、容易に行えますが、「ペリフェラル」や「セントラル」などの専門用語が難しく理解し辛い方もいると思います。
+            
+            本トークでは、そんな方々を主な対象に、Bluetoothの基礎から話し、スマートキーを作成しながら学べるようになっています。
+            
+            もちろんCore Bluetoothを用いたコーディング、そしてESP32を用いた実装方法をできる限り丁寧に紹介したいと思いますのでよければ最後までお付き合いください。
+            
+            本トーク終了後には、あなた自身でスマートキーを作り、Bluetoothを用いたデバイスの設計・制作への第一歩となるでしょう。
+            
+            @Image(source: bleIcon, alt: "")
+        }
+        
+        @Steps {
+            @Step {
+                トークで話すこと
+            }
+            
+            @Step {
+                トークで話さないこと
+            }
+        }
+    }
+}

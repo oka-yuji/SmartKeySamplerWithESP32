@@ -1,0 +1,46 @@
+@Tutorial(time: 5) {
+    @Intro(title: "Setup") {
+        Capterの説明
+        
+        @Image(source: <#file#>, alt: "<#accessible description#>")
+    }
+    
+    @Section(title: "セクションタイトル") {
+        @ContentAndMedia {
+            - test
+            - test
+            * test
+            @Image(source: <#file#>, alt: "<#accessible description#>")
+        }
+        
+        @Steps {
+            @Step {
+                初めにBluetoothManager クラスを作成し、各プロパティを定義します。
+                
+                centralManager では delegate には nil を設定していますが、super.init() 直下で self.centralManager.delegate = self で delegate を self に変更しています。
+                peripheralName や　serviceUUID　などの各CBUUID に関してはペリフェラル側での設定と同じ値となりますのでESP32でも同じ値を使用して定義します。
+                
+                @Code(name: "BluetoothManager.swift", file: Capter1-Step1.swift) 
+            }
+            
+            @Step {
+                ペリフェラルを探索する為のScanの実装を行います
+                
+                @Code(name: "BluetoothManager.swift", file: Capter1-Step2.swift) 
+            }
+            
+            @Step {
+                ペリフェラルへの書き込みの実装を行います。
+                
+                @Code(name: "BluetoothManager.swift", file: Capter1-Step3.swift) 
+            }
+            
+            @Step {
+                接続を切る実装を行います。
+                
+                @Code(name: "BluetoothManager.swift", file: Capter1-Step4.swift) 
+            }
+            
+        }
+    }
+}

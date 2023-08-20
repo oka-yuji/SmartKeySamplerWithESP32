@@ -1,0 +1,28 @@
+@Tutorials(name: "Smart key sampler") {
+    @Intro(title: "📘") {
+        # 作って学ぶBluetoothの基本攻略
+        ### 〜スマートキーアプリを作ってみよう〜
+    }
+    
+    @Chapter(name: "Introduction") {
+        自己紹介及び本トークの概要説明
+        
+        @Image(source: introduction.png, alt: "SNS用のアイコン")
+        
+        @TutorialReference(tutorial: "doc:IntroductionAndOverview")
+    }
+    
+    @Chapter(name: "Bluetoothについて") {
+        Bluetoothに関する説明
+        
+        @TutorialReference(tutorial: "doc:Bluetooth")
+    }
+    
+    @Chapter(name: "実装 〜セントラル側〜") {
+        説明
+        
+        @Image(source: <#file#>, alt: "<#accessible description#>")
+        
+        @TutorialReference(tutorial: "doc:Capter1")
+    }
+}

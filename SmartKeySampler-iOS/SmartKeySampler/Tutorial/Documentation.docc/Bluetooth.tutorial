@@ -1,0 +1,18 @@
+@Tutorial(time: 10) {
+    @Intro(title: "Bluetoothについて") {
+        Bluetoothについての説明
+        
+        @Image(source: <#file#>, alt: "<#accessible description#>")
+    }
+    
+    @Section(title: "Bluetoothの概要") {
+        @ContentAndMedia {
+        }
+        @Steps {
+            @Step {
+                Bluetoothってなに？
+                @Image(source: ‎About-Bluetooth-01.‎007, alt: "")
+            }
+        }
+    }
+}
