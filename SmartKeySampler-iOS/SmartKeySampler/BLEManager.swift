@@ -12,14 +12,15 @@ final class BLEManager: NSObject, ObservableObject {
     private var centralManager: CBCentralManager!
     private var peripheral: CBPeripheral? = nil
     private var characteristic: CBCharacteristic? = nil
-    private let peripheralName: String = "ESP-TEST-DEVICE"
-    private let serviceUUID: CBUUID = CBUUID(string: "3c3996e0-4d2c-11ed-bdc3-0242ac120002")
-    private let writeCharacteristicUUID: CBUUID = CBUUID(string:"3C399A64-4D2C-11ED-BDC3-0242AC120002")
-    private let notifyCharacteristicUUID = CBUUID(string:"3C399C44-4D2C-11ED-BDC3-0242AC120002")
+    private var peripheralName: String = "esp-test-device"
+    private var serviceUUID: CBUUID = CBUUID(string: "3c3996e0-4d2c-11ed-bdc3-0242ac120002")
+    private var writeCharacteristicUUID: CBUUID = CBUUID(string:"3C399A64-4D2C-11ED-BDC3-0242AC120002")
+    private var notifyCharacteristicUUID: CBUUID = CBUUID(string:"3C399C44-4D2C-11ED-BDC3-0242AC120002")
 
-    @Published var isKeyLocked = false
-    @Published var isConnected = false
-    @Published var logText = ""
+    @Published private(set) var isKeyLocked = false
+    @Published private(set) var isConnected = false
+    @Published private(set) var logText = ""
+    @Published var isDemoMode = false
 
     override init() {
         super.init()
@@ -28,6 +29,7 @@ final class BLEManager: NSObject, ObservableObject {
 
     func scan() {
         guard centralManager.state == .poweredOn else { return }
+        logText.append("start scan" + "\n")
         centralManager.scanForPeripherals(withServices: [serviceUUID])
     }
 
@@ -71,7 +73,10 @@ extension BLEManager: CBCentralManagerDelegate {
                         didDiscover peripheral: CBPeripheral,
                         advertisementData: [String : Any],
                         rssi RSSI: NSNumber) {
+        logText.append("start connect" + "\n")
         let peripheralName = advertisementData["kCBAdvDataLocalName"] as? String
+        logText.append("kCBAdvDataLocalName: \(peripheralName ?? "No LocalName")" + "\n")
+        logText.append((peripheral.name ?? "No PeripheralName") + "\n")
         if peripheralName == self.peripheralName {
             self.peripheral = peripheral
             central.connect(peripheral, options: nil)

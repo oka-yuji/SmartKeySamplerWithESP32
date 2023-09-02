@@ -4,30 +4,18 @@
 // See the following for generating UUIDs:
 // https://www.uuidgenerator.net/
 
-#define COMPLETE_LOCAL_NAME "ESP-TEST-DEVICE"
+#define COMPLETE_LOCAL_NAME "esp-test-device"
 #define SERVICE_UUID "3c3996e0-4d2c-11ed-bdc3-0242ac120002"
 #define CHARACTERISTIC_UUID "3c399a64-4d2c-11ed-bdc3-0242ac120002"
 #define CHARACTERISTIC_UUID_NOTIFY "3c399c44-4d2c-11ed-bdc3-0242ac120002"
-
-const int ledPin = 2;
-// Servo
 Servo servo;
 static int SERVO_PIN = 13;
-// Characteristic
 NimBLECharacteristic *pNotifyCharacteristic;
-// NimBLEServer
 NimBLEServer *pServer = NULL;
-
 bool deviceConnected = false;
 bool oldDeviceConnected = false;
 String stateValue = "0";
-uint8_t data_buff[2]; // データ通知用バッファ
-
-// class MyServerCallbacks: public BLEServerCallbacks {
-//   void onConnect(NimBLEServer * pServer) {
-//     // BLE接続があった場合にスリープモードを解除する
-//   }
-// };
+uint8_t data_buff[2];
 
 class ServerCallbacks : public NimBLEServerCallbacks
 {
@@ -91,15 +79,13 @@ class BLECallbacks : public BLECharacteristicCallbacks
         pNotifyCharacteristic->setValue(stateValue);
         pNotifyCharacteristic->notify();
         servo.write(0);
-        digitalWrite(ledPin, LOW);
       }
       else if (keyLockedState == "ON")
       {
         stateValue = keyLockedState;
         pNotifyCharacteristic->setValue(stateValue);
         pNotifyCharacteristic->notify();
-        servo.write(45);
-        digitalWrite(ledPin, HIGH);
+        servo.write(120);
       } else {
         Serial.println("無効なkeyLockedStateが渡された");
       }
@@ -113,15 +99,14 @@ void loopBLE()
   // disconnecting
   if (!deviceConnected && oldDeviceConnected)
   {
-    delay(500);                  // give the bluetooth stack the chance to get things ready
-    pServer->startAdvertising(); // restart advertising
+    delay(500);
+    pServer->startAdvertising();
     Serial.println("restartAdvertising");
     oldDeviceConnected = deviceConnected;
   }
   // connecting
   if (deviceConnected && !oldDeviceConnected)
   {
-    // do stuff here on connecting
     oldDeviceConnected = deviceConnected;
   }
 }
@@ -131,28 +116,19 @@ void setup()
   Serial.begin(115200);
   servo.attach(SERVO_PIN);
   Serial.println("Starting NimBLE Server");
-  BLEDevice::init(COMPLETE_LOCAL_NAME);
+  BLEDevice::init("test01");
   // CompleteLocalNameのセット
   NimBLEDevice::init(COMPLETE_LOCAL_NAME);
   // TxPowerのセット
   NimBLEDevice::setPower(ESP_PWR_LVL_P9);
-  pinMode(ledPin, OUTPUT);
   //セキュリティセッティング
-  // bonding,MITM,sc
-  //セキュリティ無し
-  // NimBLEDevice::setSecurityAuth(false, false, false);
-  //ボンディング有り
-  // NimBLEDevice::setSecurityAuth(true, false, false);
-  // ボンディング有り、mitm有り
-  // NimBLEDevice::setSecurityAuth(true, true, false);
+  //bonding,MITM,sc
   //ボンディング有り、mitm有り,sc有り
-   NimBLEDevice::setSecurityAuth(true, true, true);
+  NimBLEDevice::setSecurityAuth(true, true, true);
   // PassKeyのセット
    NimBLEDevice::setSecurityPasskey(123456);
   //パラメータでディスプレイ有りに設定
-   NimBLEDevice::setSecurityIOCap(BLE_HS_IO_DISPLAY_ONLY);
-  //パラメータでInOut無しに設定
-   NimBLEDevice::setSecurityIOCap(BLE_HS_IO_NO_INPUT_OUTPUT);
+  NimBLEDevice::setSecurityIOCap(BLE_HS_IO_DISPLAY_ONLY);
   pServer = NimBLEDevice::createServer();
   pServer->setCallbacks(new ServerCallbacks());
 
@@ -160,14 +136,7 @@ void setup()
 
   // RxCharacteristic
   NimBLECharacteristic *pRxCharacteristic = pService->createCharacteristic(CHARACTERISTIC_UUID, NIMBLE_PROPERTY::WRITE);
-  // NotifyCharacteristic
-  // NoSec
-  // pNotifyCharacteristic = pService->createCharacteristic(CHARACTERISTIC_UUID_NOTIFY, NIMBLE_PROPERTY::NOTIFY);
-  // Need Enc
-  // pNotifyCharacteristic = pService->createCharacteristic(CHARACTERISTIC_UUID_NOTIFY, NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC);
-  // Need Authen
-  // pNotifyCharacteristic = pService->createCharacteristic(CHARACTERISTIC_UUID_NOTIFY, NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_AUTHEN);
-  // Need Enc Authen
+  // NotifyCharacteristic Need Enc Authen
   pNotifyCharacteristic = pService->createCharacteristic(CHARACTERISTIC_UUID_NOTIFY, NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC | NIMBLE_PROPERTY::READ_AUTHEN);
 
   // RxCharacteristicにコールバックをセット
@@ -194,14 +163,6 @@ void setup()
   //アドバタイズ開始
   pNimBleAdvertising->start();
   Serial.println("first startAdvertising");
-
-  //   // スリープモードに入る
-  // esp_sleep_enable_timer_wakeup(5 * 1000000);// 60秒後に起動する
-  // Serial.println("スリープモードから5秒たったので起動しました");
-  // delay(5000);                          
-  // // esp_sleep_enable_ext0_wakeup(GPIO_NUM_0, 1); // GPIO0の状態がHIGHになったときに起動する
-  // Serial.println("スリープモードに入ります");
-  // esp_deep_sleep_start();
 }
 
 void loop()
